@@ -1,0 +1,247 @@
+ primary key (will always be the parent)
+the foreign key that will extends from the primary key that will be the child
+------------------
+EXAMPLE
+------------------
+parent table
+create table parent(parent_id int primary key,parent_name varchar(50) not null);
+
+child table
+create table child(child_id int primary key auto_increment,
+child_name varchar(50) not null,
+parent_id int,
+foreign key (parent_id) references parent(parent_id));
+
+
+ON DELETE CASCADE
+-------------------------
+the primary key in the parent and u created a foreign key of another table in that if u delete the inserted item of the one value of the parent corresponding child element related to that parent_id details also deleted in the child item
+
+EXAMPLE
+------------------
+parent table
+create table parent(parent_id int primary key,parent_name varchar(50) not null);
+
+child table
+create table child(child_id int primary key auto_increment,
+child_name varchar(50) not null,
+parent_id int,
+foreign key (parent_id) references parent(parent_id) on delete cascade);
+
+
+ON UPADTE CASCADE
+----------------------
+the primary key of the parent and the child key which is corresponding to the primary key if the values update into the primary key then the corresponding items will be also updated into the child table
+
+EXAMPLE
+------------------
+parent table
+create table parent(parent_id int primary key,parent_name varchar(50) not null);
+
+child table
+create table child(child_id int primary key auto_increment,
+child_name varchar(50) not null,
+parent_id int,
+foreign key (parent_id) references parent(parent_id) on update cascade);
+
+-- Inserting data into parent table
+insert into parent (parent_id, parent_name) values (1, 'Parent 1');
+insert into parent (parent_id, parent_name) values (2, 'Parent 2');
+
+-- Inserting data into child table
+insert into child (child_name, parent_id) values ('Child A', 1);
+insert into child (child_name, parent_id) values ('Child B', 1);
+insert into child (child_name, parent_id) values ('Child C', 2);
+
+-- Update parent_id in parent table
+update parent set parent_id = 3 where parent_id = 1;
+
+-- Check child table after update
+select * from child;
+
+
+
+VIEWS
+----------------------------
+views are the tables that contains stored queries and having the underlying tables in that table u can update and inserting the values also
+views are like virtual tables
+
+INDEXES
+------------------------------
+are used to retrieve the data from the database every quicky this will speed up the process of retreiving of data
+Where if u dont create the indexes for a column it will be used to scan the full table
+
+for ex if u have  a table that contains 500 records so seraching of items may be taking so much of time so instead u can create a  indexes to retireve the items within the small amount of time
+beacuse the table size will be less
+Indexes are used to retrieve data from the database more quickly than otherwise. The users cannot see the indexes, they are just used to speed up searches/queries.
+
+-----------------------------------
+TRANSACTIONS
+________________________________________________________
+Transactions are the unit of work
+where that unit of work has many queries to be runed
+Transactions allow you to ensure the integrity of data by enabling a set of operations to be either fully completed or fully rolled back in case of an error.
+
+
+FOR EG--
+if u want to make a withdraw of money from atm so they are many queries behind they might be many queries involved like 
+1.to get the details of ur bankaccount
+2.getting ur savings details
+3.getting amount of ur account
+4.getting withdraw of money if it is within the limit 
+5.cutting the money from ur account
+so like that they might be so many queries behind the screen of the withdrawal transactions 
+
+so transaction is a unit of work that might be having many queries releted to that transaction
+Here the transaction should be succesful only if all the queries releated to that unit of work should be sucessful for each query if anyone is failed the total transaction is failed
+
+database transcations occurs with the acid properties only
+1.the default inserting the items in dml is on
+u should off the autocommit to off or 0
+
+SET autocommit = OFF;
+Code language: SQL (Structured Query Language) (sql)
+Or:
+
+SET autocommit = 0;
+Code language: SQL (Structured Query Language) (sql)
+To enable the auto-commit mode, you set the value of the autocommit variable to 1 or ON:
+
+SET autocommit = 1;
+Code language: SQL (Structured Query Language) (sql)
+or
+
+SET autocommit = ON;
+
+ACID PROPERTIES
+__________________________________________-
+Atomicity: The outcome of a transaction can either be completely successful or completely unsuccessful. The whole transaction must be rolled back if one part of it fails.
+Consistency: Transactions maintain integrity restrictions by moving the database from one valid state to another.
+Isolation: Concurrent transactions are isolated from one another, assuring the accuracy of the data.
+Durability: Once a transaction is committed, its modifications remain in effect even in the event of a system failure.
+
+
+TCL
+--------------------------------------------------------
+Transaction Control Language (TCL) commands in SQL allow you to manage transactions within a database, including making changes done by Data Manipulation Language (DML) commands either permanent (success) or rolled back (failure).
+
+
+dml the transaction is gng to be done internally because the autocommit =1
+so to set the autocommit to off 
+In SQL, Transaction Control Language (TCL) is indeed used to control transactions, which include Data Manipulation Language (DML) commands such as SELECT, INSERT, UPDATE, and DELETE.
+
+Here's how TCL commands relate to controlling transactions involving DML commands:
+
+COMMIT: After executing a series of DML commands (such as INSERT, UPDATE, DELETE), you can use the COMMIT command to make the changes permanent and save them to the database. Once committed, the changes are visible to other transactions.
+
+ROLLBACK: If you want to undo the changes made by a series of DML commands within a transaction, you can use the ROLLBACK command. This reverts the database to its state before the transaction began.
+
+SAVEPOINT: SAVEPOINT is used to set a point within a transaction to which you can later roll back. This allows you to selectively undo parts of a transaction without rolling back the entire transaction.
+---------------------------
+EXAMPLE
+----------------------------
+
+create database tcl;
+use tcl;
+create table user(id int primary key auto_increment,name varchar(50));
+set autocommit=off;
+insert into user(name) values('monika'),('suchi'),('roja'),('anusha');
+select * from user;
+
+
+-- mysql> use tcl;
+-- Database changed
+-- mysql> select * from user;
+-- Empty set (0.00 sec) if u commit only u can see
+commit;
+rollback;
+-- once all the details are commited u cannot rollback so upadte now and rollback
+savepoint s1;
+insert into user(name) values ('srija');
+select * from user;
+
+
+TCL (Transaction Control Language): Used to manage transactions within a database, including committing or rolling back changes made by DML commands.
+
+DCL
+-----------------------------------
+DCL (Data Control Language): Used to control permissions, including granting and revoking privileges on database objects.
+
+
+
+PRIVILAGES
+--
+privileges, which are managed using Data Control Language (DCL) commands in SQL. Privileges determine what operations users can perform on database objects. Here are some common privileges:
+
+SELECT: Allows users to retrieve data from a table.
+INSERT: Allows users to add new rows of data into a table.
+UPDATE: Allows users to modify existing rows of data in a table.
+DELETE: Allows users to remove rows of data from a table.
+CREATE: Allows users to create new database objects, such as tables or views.
+DROP: Allows users to delete database objects.
+ALTER: Allows users to modify the structure of existing database objects.
+GRANT: Allows users to grant privileges to other users.
+REVOKE: Allows users to revoke privileges from other users.
+EXECUTE: Allows users to execute stored procedures or functions.
+
+
+CREATE USER USERNAME  IDENTIFIED BY PASSWORD;  
+
+
+
+create database dcl;
+
+create table employee(id int primary key auto_increment,name varchar(50),salary decimal (7,2));
+insert into employee(name,salary) values('John',30000),('Zara',50000),('Emma',25000),('AA',55000);
+create user AA identified by '123456';
+grant insert,update,delete,select on employee to AA;
+-- mysql -u AA -p
+--  use tcl;
+--  insert into employee(name,salary) values('Merry',30000);
+-- select * from employee;
+-- +----+-------+----------+
+-- | id | name  | salary   |
+-- +----+-------+----------+
+-- |  1 | John  | 30000.00 |
+-- |  2 | Zara  | 50000.00 |
+-- |  3 | Emma  | 25000.00 |
+-- |  4 | AA    | 55000.00 |
+-- |  5 | Merry | 30000.00 |
+-- +----+-------+----------+
+revoke select on employee from AA;
+-- mysql> select * from employee;
+-- ERROR 1142 (42000): SELECT command denied to user 'AA'@'localhost' for table 'employee'
+
+STORED PROCEDURES
+____________________________
+Stored procedures are precompiled SQL code that can be saved and executed on demand. They allow you to encapsulate a sequence of SQL statements into a reusable routine, providing benefits such as improved performance, easier maintenance, and enhanced security.
+
+Here's a basic example of creating a stored procedure:
+
+
+CREATE PROCEDURE GetEmployeeById (IN employeeId INT)
+BEGIN
+    SELECT * FROM employees WHERE id = employeeId;
+END;
+In this example:
+
+CREATE PROCEDURE: This SQL command is used to create a new stored procedure.
+GetEmployeeById: This is the name of the stored procedure being created.
+(IN employeeId INT): This is the parameter list for the stored procedure. In this case, it defines a single input parameter named employeeId of type INT.
+BEGIN ... END: These keywords enclose the body of the stored procedure, which contains the SQL code to be executed.
+SELECT * FROM employees WHERE id = employeeId;: This is the SQL statement within the stored procedure. It selects all columns from the employees table where the id matches the input employeeId.
+Once you have created a stored procedure, you can execute it like any other SQL statement:
+
+
+CALL GetEmployeeById(123);
+This will call the GetEmployeeById stored procedure with the parameter value 123.
+
+Stored procedures are widely used in database management systems like MySQL, PostgreSQL, SQL Server, and Oracle to encapsulate business logic and improve database performance and security.
+
+
+
+
+
+
+
+
